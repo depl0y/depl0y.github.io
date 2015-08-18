@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Filter photos in Photos using AppleScript</title>
+  <meta name="description" content="I have been cleaning up my Photos library lately. I have lots of screenshots in my library somehow (my wife and I sync to the same library) and I wanted to c...">
+
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  
+<!--  <link rel="stylesheet" href="/css/main.css"> -->
+  <link rel="canonical" href="http://cocoa.ninja/posts/Filter-out-screenshot-using-Photos">
+  <link rel="alternate" type="application/rss+xml" title="cocoa.ninja" href="http://cocoa.ninja/feed.xml" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>	    
+      <a class="navbar-brand" href="/">
+         cocoa.ninja
+      </a>
+    </div>
+  
+	  <div class="collapse navbar-collapse">
+	      <ul class="nav navbar-nav navbar-right">
+		      <li>
+			  	<a href="https://twitter.com/depl0y">
+					<img src="/img/svg/twitter.svg">
+				</a>
+	        
+			</li>
+	     
+			<li class="icon  icon--github">
+				<a href="https://github.com/depl0y">
+					<img src="/img/svg/github.svg">
+				</a>
+			</li>	 
+		
+		
+			<li class="icon icon--mail">
+				<a href="mailto:wim@sortedbits.com">
+					<img src="/img/svg/mail.svg">
+				</a>
+			</li>
+			
+			<li class="icon icon--so">
+				<a href="http://stackoverflow.com/users/69313/wim-haanstra">
+					<img src="/img/svg/stackoverflow.svg">
+				</a>
+			</li>
+			
+			
+			<li class="icon icon--so">
+				<a href="skype:wimhaanstra" id="skype_call_wim">
+					<img src="/img/svg/skype.svg">
+				</a>
+			</li>
+	  	</ul>
+	  </div>
+  </div>
+</nav>
+
+
+    <div class="container">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Filter photos in Photos using AppleScript</h1>
+  </header>
+</div>
+
+<div class="post-info">
+	<div class="author-avatar">
+		<img src="http://www.gravatar.com/avatar/0ec84fc5efb4f0dc7db5df8bf6bb41b9.png">
+	</div>
+	<div class="details">
+		<div class="row">
+			<div class="col-md-12 author-name">
+				Wim Haanstra
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 post-subtitle">
+				This post was created on <span class="post-date">April 29, 2015</span>.
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 tags">
+		   		
+		   			<span class="tag">applescript</span>
+		   		
+		   			<span class="tag">photos</span>
+		   		
+		   			<span class="tag">filter</span>
+		   		
+		   			<span class="tag">osx</span>
+		   		
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="post">
+  <article class="post-content">
+    <p>I have been cleaning up my Photos library lately. I have lots of screenshots in my library somehow (my wife and I sync to the same library) and I wanted to clean those up a bit. So at first I wanted to create a <strong>Smart Album</strong> and just let it filter on the dimensions of the photos.</p>
+
+<p>Well, that didn’t work. You somehow can’t filter on height and width of photos in Photos.
+<!-- more -->
+Now I have been playing with AppleScript every couple of months and this should be easily doable using AppleScript.</p>
+
+<p>So here is a script that filters your Photos in an album and then puts them in another album once they match dimensions.</p>
+
+<div class="highlight"><pre><code class="language-applescript" data-lang="applescript"><span class="k">tell</span> <span class="nb">application</span> <span class="s2">&quot;Photos&quot;</span>
+	
+	<span class="c">-- The name of the album you want to search for screenshots</span>
+	<span class="k">set</span> <span class="nv">source_album_name</span> <span class="k">to</span> <span class="s2">&quot;My Source Album&quot;</span>
+
+	<span class="c">-- The name of the album where you want to add the screenshots to</span>
+	<span class="k">set</span> <span class="nv">target_album_name</span> <span class="k">to</span> <span class="s2">&quot;Screenshots&quot;</span>
+	
+	<span class="c">-- resolutions: iPhone 4, iPhone 5S, iPhone 6 defined as { width x height }</span>
+	<span class="k">set</span> <span class="nv">target_resolutions</span> <span class="k">to</span> <span class="p">{{</span><span class="mi">480</span><span class="p">,</span> <span class="mi">640</span><span class="p">},</span> <span class="p">{</span><span class="mi">640</span><span class="p">,</span> <span class="mi">1136</span><span class="p">},</span> <span class="p">{</span><span class="mi">750</span><span class="p">,</span> <span class="mi">1334</span><span class="p">}}</span>
+	
+	<span class="c">-- If the &#39;target_album_name&#39; does not exist as an Album, it will be created</span>
+	<span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">exists</span> <span class="nv">container</span> <span class="nv">named</span> <span class="nv">target_album_name</span><span class="p">)</span> <span class="k">then</span>
+		<span class="nb">make</span> <span class="nb">new</span> <span class="nv">album</span> <span class="nv">named</span> <span class="nv">target_album_name</span>
+	<span class="k">end</span> <span class="k">if</span>
+	
+	<span class="c">-- Fetch the album you want to search</span>
+	<span class="k">set</span> <span class="nv">target_album</span> <span class="k">to</span> <span class="nv">container</span> <span class="nv">target_album_name</span>
+
+	<span class="c">-- Fetch the album you want to store the images in</span>
+	<span class="k">set</span> <span class="nv">source_album</span> <span class="k">to</span> <span class="nv">container</span> <span class="nv">source_album_name</span>
+	
+	<span class="k">repeat</span> <span class="nv">with</span> <span class="nv">resolution</span> <span class="k">in</span> <span class="nv">target_resolutions</span>
+		<span class="k">set</span> <span class="nv">target_width</span> <span class="k">to</span> <span class="nb">item</span> <span class="mi">1</span> <span class="k">of</span> <span class="nv">resolution</span>
+		<span class="k">set</span> <span class="nv">target_height</span> <span class="k">to</span> <span class="nb">item</span> <span class="mi">2</span> <span class="k">of</span> <span class="nv">resolution</span>
+		
+		<span class="nv">add</span> <span class="p">(</span><span class="k">get</span> <span class="nb">every</span> <span class="nv">media</span> <span class="nb">item</span> <span class="k">in</span> <span class="nv">source_album</span> <span class="nb">whose</span> <span class="na">width</span> <span class="ow">is equal</span> <span class="k">to</span> <span class="nv">target_width</span> <span class="ow">and</span> <span class="nv">height</span> <span class="ow">is equal</span> <span class="k">to</span> <span class="nv">target_height</span><span class="p">)</span> <span class="k">to</span> <span class="nv">target_album</span>
+	<span class="k">end</span> <span class="k">repeat</span>
+	
+<span class="k">end</span> <span class="k">tell</span></code></pre></div>
+
+<h2 id="there-is-one-problem-though">There is one problem though.</h2>
+<p>It’s still <strong>not</strong> flawless, because sometimes I get some un-googlable error.</p>
+
+<div class="highlight"><pre><code class="language-applescript" data-lang="applescript"><span class="k">error</span> <span class="s2">&quot;Photos got an error: AppleEvent handler failed.&quot;</span> <span class="nv">number</span> <span class="o">-</span><span class="mi">10000</span></code></pre></div>
+
+<p>This error happens from time to time (it is consistent, this occurs on the same albums every time). First I thought it was because of the amount of pictures I have in my library, but sometimes it occurs on an album with 1.000 photos and then it works flawlessly on an album with 3.500 pictures.</p>
+
+<p>If anyone has any pointers, please don’t hesitate to <a href="http://twitter.com/depl0y">contact me</a>.</p>
+
+  </article>
+</div>
+
+
+<div id="disqus_thread" class="comments">
+  <script type="text/javascript">
+      var disqus_shortname = 'cocoaninja';
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+    </div>
+
+    <footer class="footer">
+	<div class="container">
+		<p class="text-muted">&copy; 2015 - Wim Haanstra</p>
+	</div>
+</footer>
+
+	<script type="text/javascript" src="/js/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-15884210-11', 'auto');
+	  ga('send', 'pageview');
+	
+	</script>
+	
+  </body>
+
+</html>

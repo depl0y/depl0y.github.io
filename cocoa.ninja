@@ -1,0 +1,4 @@
+ruby -rubygems -e 'require "jekyll-import";
+    JekyllImport::Importers::RSS.run({
+      "source" => "http://wim.me/feed/"
+    })'

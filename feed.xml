@@ -1,0 +1,786 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>cocoa.ninja</title>
+    <description>Building awesome stuff</description>
+    <link>http://cocoa.ninja/</link>
+    <atom:link href="http://cocoa.ninja/feed.xml" rel="self" type="application/rss+xml"/>
+    <pubDate>Wed, 10 Jun 2015 20:28:39 +0200</pubDate>
+    <lastBuildDate>Wed, 10 Jun 2015 20:28:39 +0200</lastBuildDate>
+    <generator>Jekyll v2.5.3</generator>
+    
+      <item>
+        <title>App harvesting and how would this be solvable</title>
+        <description>
+&lt;p&gt;Yesterday I had a discussion on Twitter with &lt;a href=&quot;http://twitter.com/schwa&quot;&gt;Jonathan Wight (@schwa)&lt;/a&gt; on a “bug/new feature” that &lt;a href=&quot;http://twitter.com/stevestreza&quot;&gt;Steve Streza (@stevestreza)&lt;/a&gt; encountered in iOS9. &lt;code&gt;canOpenUrl&lt;/code&gt; failed for a call with the scheme &lt;code&gt;tumblr:&lt;/code&gt;. I replied to &lt;a href=&quot;https://twitter.com/schwa/status/608366858916491265&quot;&gt;this&lt;/a&gt; saying that this would probably be solved with some sort of UIKit involvement.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+&lt;p&gt;First, let’s just assume the &lt;code&gt;canOpenUrl&lt;/code&gt; failure is actually intended in iOS9.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;App Harvesting, what?&lt;/strong&gt;&lt;br /&gt;
+App harvesting or whatever you call it is the process of an app trying to determine what other apps are installed on your phone and sending that information the their own or some 3rd party service. Twitter has been known to be doing this. This is clearly an invasion of my privacy, wouldn’t want people to know that next to Telegram, I do still have WhatsApp installed on my phone ;).&lt;/p&gt;
+
+&lt;p&gt;So the more I thought about it, the more it sounds solvable using some sort of component handled by UIKit.&lt;/p&gt;
+
+&lt;p&gt;So this is just a brain-fart, because I haven’t thought about this for longer that an hour or so, so the solution may be too simple, but I would love to hear why.&lt;/p&gt;
+
+&lt;p&gt;At the moment when you set up &lt;code&gt;CFBundleURLTypes&lt;/code&gt; your app becomes &lt;em&gt;the&lt;/em&gt; app to open URLs with that scheme. Now this seems like a system that is based on good intentions. There is nothing stopping me submitting an app which accepts the same schemes as for example the Twitter or Tumblr app.&lt;/p&gt;
+
+&lt;p&gt;So, when 2 apps register the same URL schemes, you actually break the system as it is in place now. Which app should now open up that link you just clicked in Safari (or in any other app for that matter).&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;So what can we do?&lt;/strong&gt;&lt;br /&gt;
+Well to remove the &lt;code&gt;canOpenUrl&lt;/code&gt; functionality we actually need Apple to step in and offer us some sheet which you can call from within your application.&lt;/p&gt;
+
+&lt;p&gt;For example it would be possible to call up a sheet which shows you all applications that are registered for a certain scheme (&lt;em&gt;pseudo code here, just making this up as I go&lt;/em&gt;):&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-swift&quot; data-lang=&quot;swift&quot;&gt;&lt;span class=&quot;lineno&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;success&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;UIOpenUrlHandler&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;openUpSomeUrlOpeningSheet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nl&quot;&gt;scheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&amp;quot;myscheme:&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;When this code is executed for the first time, iOS should trigger it’s security system and ask the user if it really wants the app to have access to other applications.&lt;/p&gt;
+
+&lt;p&gt;This could open up a sheet which shows you all the applications installed for this scheme. Optionally it could return &lt;code&gt;false&lt;/code&gt; when there are no applications installed for this scheme or when the user denies access to this information, because returning &lt;code&gt;true&lt;/code&gt; could mean you already have that &lt;strong&gt;one&lt;/strong&gt; application installed which supports &lt;code&gt;myscheme&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;The user selects an app in the sheet and the app is called with the url with the &lt;code&gt;myscheme&lt;/code&gt; scheme.&lt;/p&gt;
+
+&lt;p&gt;Now this would cause troubles for launcher apps, because it would mean an extra click every time you want your app to open up an external url, so why not ask the user if this is the default app they want to use to open this type of URLs from within this application? The next time you call &lt;code&gt;openUpSomeUrlOpeningSheet&lt;/code&gt; it could just run the default app the user selected.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Important&lt;/strong&gt;&lt;br /&gt;
+As I said before, there is probably more to think about. But when this is integrated system wide it could elegantly support other browser, mail apps, etc.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 10 Jun 2015 07:21:14 +0200</pubDate>
+        <link>http://cocoa.ninja/posts/Device-harvesting</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/Device-harvesting</guid>
+        
+        <category>blog</category>
+        
+        <category>canOpenUrl</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Filter photos in Photos using AppleScript</title>
+        <description>&lt;p&gt;I have been cleaning up my Photos library lately. I have lots of screenshots in my library somehow (my wife and I sync to the same library) and I wanted to clean those up a bit. So at first I wanted to create a &lt;strong&gt;Smart Album&lt;/strong&gt; and just let it filter on the dimensions of the photos.&lt;/p&gt;
+
+&lt;p&gt;Well, that didn’t work. You somehow can’t filter on height and width of photos in Photos.
+&lt;!-- more --&gt;
+Now I have been playing with AppleScript every couple of months and this should be easily doable using AppleScript.&lt;/p&gt;
+
+&lt;p&gt;So here is a script that filters your Photos in an album and then puts them in another album once they match dimensions.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-applescript&quot; data-lang=&quot;applescript&quot;&gt;&lt;span class=&quot;k&quot;&gt;tell&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;application&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Photos&amp;quot;&lt;/span&gt;
+	
+	&lt;span class=&quot;c&quot;&gt;-- The name of the album you want to search for screenshots&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;source_album_name&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;My Source Album&amp;quot;&lt;/span&gt;
+
+	&lt;span class=&quot;c&quot;&gt;-- The name of the album where you want to add the screenshots to&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_album_name&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Screenshots&amp;quot;&lt;/span&gt;
+	
+	&lt;span class=&quot;c&quot;&gt;-- resolutions: iPhone 4, iPhone 5S, iPhone 6 defined as { width x height }&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_resolutions&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;480&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;640&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;640&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1136&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;750&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1334&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;
+	
+	&lt;span class=&quot;c&quot;&gt;-- If the &amp;#39;target_album_name&amp;#39; does not exist as an Album, it will be created&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;exists&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;container&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_album_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+		&lt;span class=&quot;nb&quot;&gt;make&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;album&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_album_name&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;
+	
+	&lt;span class=&quot;c&quot;&gt;-- Fetch the album you want to search&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_album&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;container&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_album_name&lt;/span&gt;
+
+	&lt;span class=&quot;c&quot;&gt;-- Fetch the album you want to store the images in&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;source_album&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;container&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;source_album_name&lt;/span&gt;
+	
+	&lt;span class=&quot;k&quot;&gt;repeat&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;with&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;resolution&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_resolutions&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_width&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;resolution&lt;/span&gt;
+		&lt;span class=&quot;k&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_height&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;of&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;resolution&lt;/span&gt;
+		
+		&lt;span class=&quot;nv&quot;&gt;add&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;every&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;media&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;source_album&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;whose&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;is equal&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_width&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;and&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;ow&quot;&gt;is equal&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;to&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_album&lt;/span&gt;
+	&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;repeat&lt;/span&gt;
+	
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;tell&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;there-is-one-problem-though&quot;&gt;There is one problem though.&lt;/h2&gt;
+&lt;p&gt;It’s still &lt;strong&gt;not&lt;/strong&gt; flawless, because sometimes I get some un-googlable error.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-applescript&quot; data-lang=&quot;applescript&quot;&gt;&lt;span class=&quot;k&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;Photos got an error: AppleEvent handler failed.&amp;quot;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;number&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10000&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;This error happens from time to time (it is consistent, this occurs on the same albums every time). First I thought it was because of the amount of pictures I have in my library, but sometimes it occurs on an album with 1.000 photos and then it works flawlessly on an album with 3.500 pictures.&lt;/p&gt;
+
+&lt;p&gt;If anyone has any pointers, please don’t hesitate to &lt;a href=&quot;http://twitter.com/depl0y&quot;&gt;contact me&lt;/a&gt;.&lt;/p&gt;
+</description>
+        <pubDate>Wed, 29 Apr 2015 19:23:14 +0200</pubDate>
+        <link>http://cocoa.ninja/posts/Filter-out-screenshot-using-Photos</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/Filter-out-screenshot-using-Photos</guid>
+        
+        <category>applescript</category>
+        
+        <category>photos</category>
+        
+        <category>filter</category>
+        
+        <category>osx</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Mobile phone history</title>
+        <description>&lt;p&gt;I had this post up some time ago, but somehow it disappeared on me. So I went through the trouble again to gather this information, mostly because I want to keep a record of it myself.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;div class=&quot;row&quot;&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-xs-6 col-sm-4&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			September 2014
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/apple-iphone-6-3.jpg&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Apple iPhone 6 32GB
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-xs-6 col-sm-4&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			October 2013
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/apple-iphone-5s-ofic.jpg&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Apple iPhone 5S 32GB
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			December 2012
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/htc-one-x-plus-ofic.jpg&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			HTC One X+ (Work)
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			September 2012
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/apple-iphone-5-ofic.jpg&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Apple iPhone 5 32GB
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			January 2012
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/apple-iphone-4s-new.jpg&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Apple iPhone 4S 32GB
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			September 2010
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/apple-iphone-4-ofic-final.jpg&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Apple iPhone 4 16GB
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			July 2008
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/apple-iphone3g.jpg&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Apple iPhone 3G 16GB
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			January 2008
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/apple-iphone.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Apple iPhone 8GB
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			July 2007
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/sonyericsson-w850.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Sony Ericsson W850i
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			October 2006
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/no6681.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 6681
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			March 2006
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/qtek-a9100.jpg&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Qtek 9100
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			June 2005
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/nokia-6230i.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 6230i (Work)
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			October 2004
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/no6230.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 6230 (Work)
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			June 2004
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/no7610.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 7610
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			November 2003
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/no6610.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 6610
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			May 2003
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/shv801.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Sharp V801SH
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			November 2002
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/no7650.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 7650
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			January 2002
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/no8310.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 8310
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			June 2001
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/no8850t.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 8850
+		&lt;/div&gt;	
+	&lt;/div&gt;
+
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			March 2000
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/no3210b.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Nokia 3210
+		&lt;/div&gt;	
+	&lt;/div&gt;
+	
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			August 1999
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/boc509b.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Bosch 509
+		&lt;/div&gt;	
+	&lt;/div&gt;
+	
+	
+	&lt;div class=&quot;phone col-md-3 col-sm-4 col-xs-6&quot;&gt;
+		&lt;div class=&quot;date&quot;&gt;
+			May 1999
+		&lt;/div&gt;
+		&lt;div class=&quot;image&quot;&gt;
+			&lt;img src=&quot;/img/phones/mom3188b.gif&quot; /&gt;
+		&lt;/div&gt;
+		&lt;div class=&quot;title&quot;&gt;
+			Motorola M3188
+		&lt;/div&gt;	
+	&lt;/div&gt;
+&lt;/div&gt;
+
+</description>
+        <pubDate>Mon, 27 Apr 2015 00:00:00 +0200</pubDate>
+        <link>http://cocoa.ninja/posts/Mobile-phone-history</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/Mobile-phone-history</guid>
+        
+        <category>blog</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>HomeWizard Online API</title>
+        <description>
+&lt;p&gt;A &lt;strong&gt;while&lt;/strong&gt; back I wrote about the &lt;a href=&quot;http://cocoa.ninja/posts/HomeWizard-API-calls/&quot;&gt;HomeWizard API&lt;/a&gt; for when the HomeWizard is located inside your current network. That post is still up-to-date but it has one problem. You can’t control your devices from outside of your home.&lt;/p&gt;
+
+&lt;p&gt;So now I did some network sniffing and I figured out how to control your HomeWizard from outside your own network (as long as you have a HomeWizard Online account).&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;What you need to login to a HWO account, you need an &lt;strong&gt;email address&lt;/strong&gt; and a &lt;strong&gt;password&lt;/strong&gt; and perform a generic &lt;code&gt;GET&lt;/code&gt; request on &lt;code&gt;https://cloud.homewizard.com/account/login&lt;/code&gt;. The password needs to be hashed to a SHA1 hash (in lowercase!) and &lt;strong&gt;Basic authentication&lt;/strong&gt; should be used.&lt;/p&gt;
+
+&lt;p&gt;Here is an example written in Swift, using AFNetworking:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-js&quot; data-lang=&quot;js&quot;&gt;&lt;span class=&quot;lineno&quot;&gt; 1&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;https://cloud.homewizard.com/account/login&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 2&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt; 3&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;manager&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AFHTTPRequestOperationManager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 4&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;manager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;requestSerializer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AFHTTPRequestSerializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 5&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;manager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;requestSerializer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;setAuthorizationHeaderFieldWithUsername&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;emailAddress&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;hashedPassword&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;lowercaseString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 6&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;manager&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;GET&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;parameters&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;success&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AFHTTPRequestOperation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;responseObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AnyObject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 7&lt;/span&gt;     &lt;span class=&quot;nx&quot;&gt;DDLogVerbose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;\(responseObject)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 8&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 9&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;failure&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;operation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AFHTTPRequestOperation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;nx&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;NSError&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;10&lt;/span&gt;     &lt;span class=&quot;nx&quot;&gt;DDLogError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&amp;quot;Error: \(error.localizedDescription)&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;11&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;code&gt;hashedPassword&lt;/code&gt; variable mentioned in the code is the password of your HWO account, hashed using the SHA1 algorithm. I use &lt;a href=&quot;https://github.com/krzyzanowskim/CryptoSwift&quot;&gt;CryptoSwift&lt;/a&gt; for this.&lt;/p&gt;
+
+&lt;p&gt;This request will return a response, which includes some valuable information:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;lineno&quot;&gt; 1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 2&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;&amp;quot;session&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;[sessionid]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 3&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;&amp;quot;email&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;[email address]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 4&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;&amp;quot;response&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 5&lt;/span&gt;         &lt;span class=&quot;nt&quot;&gt;&amp;quot;serial&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;[serial number]&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 6&lt;/span&gt;         &lt;span class=&quot;nt&quot;&gt;&amp;quot;name&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;My HomeWizard&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 7&lt;/span&gt;         &lt;span class=&quot;nt&quot;&gt;&amp;quot;online&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 8&lt;/span&gt;         &lt;span class=&quot;nt&quot;&gt;&amp;quot;hops&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 9&lt;/span&gt;         &lt;span class=&quot;nt&quot;&gt;&amp;quot;local&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;10&lt;/span&gt;         &lt;span class=&quot;nt&quot;&gt;&amp;quot;host&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;[internal ip]&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;11&lt;/span&gt;     &lt;span class=&quot;p&quot;&gt;}],&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;12&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;&amp;quot;cloud&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;13&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;&amp;quot;version&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;1.4&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;14&lt;/span&gt;     &lt;span class=&quot;nt&quot;&gt;&amp;quot;status&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;ok&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;15&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The values you want to keep in mind are &lt;code&gt;session&lt;/code&gt;, &lt;code&gt;response/serial&lt;/code&gt; and &lt;code&gt;response/host&lt;/code&gt;. The &lt;code&gt;response/host&lt;/code&gt; variable contains the internal IP of the HomeWizard. This way you could check if the HomeWizard is available using the internal IP address or not. This could make responses faster. To communicate through the HWO system, you need to keep your &lt;code&gt;session&lt;/code&gt; and &lt;code&gt;serial&lt;/code&gt; variables, because you need it to construct the right URLs.&lt;/p&gt;
+
+&lt;p&gt;The next call you want to perform is probably something like &lt;code&gt;https://cloud.homewizard.com/forward/[sessionid]/[serial]/get-sensors&lt;/code&gt; where as you can see the &lt;code&gt;session&lt;/code&gt; and &lt;code&gt;serial&lt;/code&gt; variables are put inside the URL. Also supply the call with the right authentication credentials again, to make sure you are authenticated when performing the call.&lt;/p&gt;
+
+&lt;p&gt;The &lt;code&gt;get-sensors&lt;/code&gt; part is straight from the &lt;a href=&quot;http://cocoa.ninja/posts/HomeWizard-API-calls/&quot;&gt;HomeWizard API&lt;/a&gt; post and you can use that post to create the rest of your requests, to control your HomeWizard.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 22 Apr 2015 09:23:14 +0200</pubDate>
+        <link>http://cocoa.ninja/posts/HomeWizard-Online-API</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/HomeWizard-Online-API</guid>
+        
+        <category>swift</category>
+        
+        <category>homewizard</category>
+        
+        <category>homehandler</category>
+        
+        
+        <category>development</category>
+        
+        <category>homewizard</category>
+        
+      </item>
+    
+      <item>
+        <title>HomeWizard, Hue and UIColor</title>
+        <description>&lt;p&gt;So this weekend I have been struggling a bit with getting the HomeHandler app to display the right Philips Hue colors. When Hue lights are connected to your HomeWizard, the HomeWizard API uses a format that is a bit different than the format you would expect for a HSB color.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;It uses the following format to show which color is set for your Hue lightbulb:&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-json&quot; data-lang=&quot;json&quot;&gt;&lt;span class=&quot;lineno&quot;&gt; 1&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 2&lt;/span&gt; 	&lt;span class=&quot;nt&quot;&gt;&amp;quot;color&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 3&lt;/span&gt; 		&lt;span class=&quot;nt&quot;&gt;&amp;quot;bri&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 4&lt;/span&gt; 		&lt;span class=&quot;nt&quot;&gt;&amp;quot;hue&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;349&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 5&lt;/span&gt; 		&lt;span class=&quot;nt&quot;&gt;&amp;quot;sat&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;89&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 6&lt;/span&gt; 	&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 7&lt;/span&gt; 	&lt;span class=&quot;s2&quot;&gt;&amp;quot;id&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 8&lt;/span&gt; 	&lt;span class=&quot;nt&quot;&gt;&amp;quot;status&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;on&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 9&lt;/span&gt; 	&lt;span class=&quot;nt&quot;&gt;&amp;quot;type&amp;quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&amp;quot;hue&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;A good thing to know about HSB (Hue, Saturation, Brightness) is, that the Hue value is within the range 0 to 360 (degrees), while the other two values are in the 0 to 100 range (percentages). The UIColor does not work that way though:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;[UIColor colorWithHue:CGFloat saturation:CGFloat brightness:CGFloat alpha:CGFloat]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This method only accepts values in the 0 to 1 range. So we have to calculate the right values. So call it like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;[UIColor colorWithHue:(hue / 360.0f) saturation:(sat / 100.0f) brightness:(bri / 100.0f) alpha:1.0]
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Next up, we need sliders to define the Hue, Sat and Bri values. I’ll open-source those sliders for others to use. Coming soon!&lt;/p&gt;
+</description>
+        <pubDate>Sat, 14 Jun 2014 09:23:14 +0200</pubDate>
+        <link>http://cocoa.ninja/posts/HomeWizard-Hues-and-UIColor</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/HomeWizard-Hues-and-UIColor</guid>
+        
+        <category>objC</category>
+        
+        <category>Hue</category>
+        
+        <category>HomeHandler</category>
+        
+        <category>UIColor</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>HomeWizard API calls</title>
+        <description>&lt;p&gt;I am currently working on getting my HomeWizard up and running with a nice iPad application I am building. I only &lt;strong&gt;read&lt;/strong&gt; settings from the HomeWizard, so I am focusing on reading the sensors and switching lights, turning up heat, etc. If you want to add sensors or change settings, just sniff the API calls using a network sniffer. If there is any interest, I might update this article to include them.&lt;/p&gt;
+
+&lt;!-- more --&gt;
+
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/get-sensors&lt;/code&gt;&lt;br /&gt;
+Get all the sensors, switches, smoke detectors, etc connected to your HomeWizard.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/get-status&lt;/code&gt;&lt;br /&gt;
+The same response as &lt;code&gt;get-sensors&lt;/code&gt;, but in a shorter format. I use this for updating the status of buttons, dimmers, etc.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/sw/&amp;lt;switch id&amp;gt;/[on/off]&lt;/code&gt;&lt;br /&gt;
+Turn a switch with id &lt;switch&gt; &lt;strong&gt;on&lt;/strong&gt; or &lt;strong&gt;off&lt;/strong&gt;.
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/sw/dim/&amp;lt;switch id&amp;gt;/[0..100]&lt;/code&gt;&lt;br /&gt;
+Dim a dimmer to a &lt;strong&gt;[0..100]&lt;/strong&gt; value. According to the documentation this should be &lt;strong&gt;[0..255]&lt;/strong&gt;, but this is giving me weird results.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/sw/&amp;lt;switch id&amp;gt;/[on/off]/[0..360]/[0..100]/[0..100]&lt;/code&gt;&lt;br /&gt;
+Control a Hue light. Where the on or off switches the light &lt;strong&gt;on&lt;/strong&gt; or &lt;strong&gt;off&lt;/strong&gt;. The other values are: &lt;strong&gt;Hue&lt;/strong&gt;, &lt;strong&gt;Saturation&lt;/strong&gt; and &lt;strong&gt;Brightness&lt;/strong&gt; in that order.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/gp/get/&amp;lt;scene id&amp;gt;&lt;/code&gt;&lt;br /&gt;
+Get the details of a scene, like the buttons and their statuses.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/gp/get/&amp;lt;scene id&amp;gt;&lt;/code&gt;&lt;br /&gt;
+Get the details of a scene, like the buttons and their statuses.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/gp/&amp;lt;scene id&amp;gt;/[on/off]&lt;/code&gt;&lt;br /&gt;
+Turn a scene with id &lt;switch&gt; &lt;strong&gt;on&lt;/strong&gt; or &lt;strong&gt;off&lt;/strong&gt;.
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/sf/&amp;lt;somfy id&amp;gt;/[down/up/stop]&lt;/code&gt;&lt;br /&gt;
+Control a Somfy device. &lt;strong&gt;Up&lt;/strong&gt; goes up, &lt;strong&gt;Down&lt;/strong&gt; goes down and &lt;strong&gt;Stop&lt;/strong&gt; stops the current actions &lt;em&gt;OR&lt;/em&gt; sends the Somfy to the predefined state.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/el/graph/&amp;lt;EnergyLink ID&amp;gt;/[day/week/month/year]&lt;/code&gt;&lt;br /&gt;
+Get values to generate graphs for the specified EnergyLink.&lt;/p&gt;
+&lt;p&gt;&lt;code&gt;http://&amp;lt;homewizard-ip&amp;gt;/&amp;lt;password&amp;gt;/te/graph/&amp;lt;Thermometer ID&amp;gt;/[day/week/month/year]&lt;/code&gt;&lt;br /&gt;
+Get values to generate graphs for the specified thermometer. So this what I currently have, something I am building at the moment is a control panel for every switch in the house, including some statistics about power usage, outside temperatures, etc.&lt;/p&gt;
+&lt;/switch&gt;&lt;/p&gt;&lt;/switch&gt;&lt;/p&gt;
+</description>
+        <pubDate>Mon, 14 Apr 2014 00:00:00 +0200</pubDate>
+        <link>http://cocoa.ninja/posts/HomeWizard-API-calls</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/HomeWizard-API-calls</guid>
+        
+        <category>homewizard</category>
+        
+        <category>API</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Calculating the percentage from a point within a range</title>
+        <description>
+&lt;p&gt;Thanks to an awesome answer on &lt;a href=&quot;http://math.stackexchange.com/questions/51509/how-to-calculate-percentage-of-value-inside-arbitrary-range&quot;&gt;math.stackexchange.com&lt;/a&gt; I just wanted to make a note to self. For quite a few controls it is needed to calculate the percentage of a certain point within a range (for example when building a custom slider control). 
+&lt;!-- more --&gt;
+Let’s say we have the following values:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+float _minValue = 0;
+float _maxValue = 200;
+float _value = 50;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Using simple values here, to demonstrate that it works.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;float _percentage = ((_value - _minValue) / (_maxValue - _minValue)) * 100&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This ends up in:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;((50 - 0) / (200 - 0)) * 100 = 25&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;But we already knew that 50 is 25% in a 0 to 200 scale, right? But now lets do it the other way around. Let’s say we have the following values:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;
+float _minValue = 0;
+float _maxValue = 200;
+float _percentage = 25;
+&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Now we can calculate the value that belongs with that percentage on the specified scale:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;float _value = (1.0f/100.0f) * ((_percentage * _maxValue) + (100 * _minValue) - (_percentage * _minValue))&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;This ends up in:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;(1/100) * ((25 * 200) + (100 * 0) - (25 * 0)) = 50&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Amazing, right? This also works with ranges that have negative _minValue’s, etc. I was never that good in algebra, so I certainly need to save this somewhere.&lt;/p&gt;
+
+</description>
+        <pubDate>Wed, 05 Mar 2014 08:23:14 +0100</pubDate>
+        <link>http://cocoa.ninja/posts/Calculating-the-percentage-from-a-point</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/Calculating-the-percentage-from-a-point</guid>
+        
+        <category>math</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Getting the size of a NSAttributedString</title>
+        <description>&lt;p&gt;In iOS7 the &lt;code&gt;sizeWithFont&lt;/code&gt; methods for the &lt;code&gt;NSString&lt;/code&gt; class are deprecated. I think this has to do with the complete move to &lt;code&gt;NSAttributedString&lt;/code&gt; that Apple has in mind, which does give developers a lot more options for styling.&lt;/p&gt;
+
+&lt;p&gt;But of course, we use those methods a lot, so we need to use the replacement method Apple has implemented for us: &lt;code&gt;boundingRectWithSize&lt;/code&gt;, but this method is not really documented that well. Results are weird when you first start out using it or in the worse case, the method does not seem to work at all.
+&lt;!-- more --&gt;
+I have been struggling to get this to work and one of the problems was, that the &lt;code&gt;boundingRectWithSize&lt;/code&gt; gave me a rectangle that was just 1 line in height.&lt;/p&gt;
+
+&lt;p&gt;The solution, in the end, was fairly simple, supply a &lt;code&gt;NSMutableParagraphStyle&lt;/code&gt;. So here is a piece of code, which is actually an extension to the &lt;code&gt;NSString&lt;/code&gt; class.&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;lineno&quot;&gt; 1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;(Size)&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 2&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt; 3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CGSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;attributedSizeWithFont:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIFont&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CGSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;attributedSizeWithFont:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIFont&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;font&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;maxWidth:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 5&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt; 6&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 7&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt; 8&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;NSString&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;(Size)&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 9&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;10&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CGSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;attributedSizeWithFont:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIFont&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;font&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;11&lt;/span&gt;     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;attributedSizeWithFont&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;font&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;maxWidth&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGFLOAT_MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;13&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;14&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CGSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;attributedSizeWithFont:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIFont&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;font&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;maxWidth:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;width&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;15&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;16&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;NSMutableParagraphStyle&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;style&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSMutableParagraphStyle&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;17&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lineBreakMode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NSLineBreakByWordWrapping&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;18&lt;/span&gt;     
+&lt;span class=&quot;lineno&quot;&gt;19&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;NSAttributedString&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributedText&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;NSAttributedString&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;initWithString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;20&lt;/span&gt;         &lt;span class=&quot;nl&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;l&quot;&gt;@{&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;NSFontAttributeName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;font&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;21&lt;/span&gt;         &lt;span class=&quot;nl&quot;&gt;NSForegroundColorAttributeName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIColor&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;blackColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;22&lt;/span&gt;         &lt;span class=&quot;nl&quot;&gt;NSParagraphStyleAttributeName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;style&lt;/span&gt; &lt;span class=&quot;l&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;23&lt;/span&gt; 	&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;24&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;25&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;CGRect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributedText&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;boundingRectWithSize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;CGSizeMake&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGFLOAT_MAX&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;26&lt;/span&gt; 							&lt;span class=&quot;nl&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;NSStringDrawingUsesLineFragmentOrigin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;27&lt;/span&gt; 							&lt;span class=&quot;nl&quot;&gt;context&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;28&lt;/span&gt;     &lt;span class=&quot;bp&quot;&gt;CGSize&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;textRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;29&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ceilf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;30&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ceilf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;31&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;32&lt;/span&gt;     &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;33&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;34&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;35&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+</description>
+        <pubDate>Thu, 13 Feb 2014 08:23:14 +0100</pubDate>
+        <link>http://cocoa.ninja/posts/Getting-the-size-of-a-NSAttributedString</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/Getting-the-size-of-a-NSAttributedString</guid>
+        
+        <category>objC</category>
+        
+        <category>NSAttributedString</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Getting Windows 8, Visual Studio and IIS to play nice</title>
+        <description>&lt;p&gt;I have upgrading to Windows 8 a couple of times now, but I had one problem with it. We use IIS on our laptops to host the project we are currently working on and use Visual Studio to debug right on it. Since Windows 8 does not give users FULL administrator rights anymore, you always had to start Visual Studio as an administrator.
+&lt;!-- more --&gt;
+This screwed up double clicking your solution files and have enough permissions to connect to IIS for debugging.&lt;/p&gt;
+
+&lt;p&gt;Finally I have found a solution for this problem and I can finally start using Windows 8(.1). So you want to use Visual Studio as an administrator and connect correctly to IIS every time you start it? Follow these steps:&lt;/p&gt;
+
+&lt;h2 id=&quot;find-your-devenvexe&quot;&gt;Find your devenv.exe&lt;/h2&gt;
+&lt;p&gt;For x64 systems this can be found here (Visual Studio 2013 on x64 Windows 8.1):&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-bash&quot; data-lang=&quot;bash&quot;&gt;&lt;span class=&quot;lineno&quot;&gt;1&lt;/span&gt; C:&lt;span class=&quot;se&quot;&gt;\P&lt;/span&gt;rogram Files &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;x86&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\M&lt;/span&gt;icrosoft Visual Studio 12.0&lt;span class=&quot;se&quot;&gt;\C&lt;/span&gt;ommon7&lt;span class=&quot;se&quot;&gt;\I&lt;/span&gt;DE&lt;span class=&quot;se&quot;&gt;\d&lt;/span&gt;evenv.exe&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;do-some-compatibility-troubleshooting&quot;&gt;Do some compatibility troubleshooting&lt;/h2&gt;
+&lt;p&gt;Right click devenv.exe and click “Troubleshoot compatibility”.&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&quot;alignnone size-medium wp-image-2599&quot; alt=&quot;Screen Shot 2013-10-21 at 16.58.08&quot; src=&quot;/img/Screen-Shot-2013-10-21-at-16.58.08.png&quot; width=&quot;750&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It will start looking for a solution online. Ignore that.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt=&quot;Screen Shot 2013-10-21 at 16.58.19&quot; src=&quot;/img/Screen-Shot-2013-10-21-at-16.58.19.png&quot; width=&quot;750&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Choose “Troubleshoot program”.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt=&quot;Screen Shot 2013-10-21 at 16.58.26&quot; src=&quot;/img/Screen-Shot-2013-10-21-at-16.58.26.png&quot; width=&quot;750&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It shows you a couple of options to fix this issue. Select the one saying “The program requires additional permissions”.&lt;/p&gt;
+
+&lt;h2 id=&quot;test-it-out&quot;&gt;Test it out&lt;/h2&gt;
+
+&lt;p&gt;&lt;img alt=&quot;Screen Shot 2013-10-21 at 16.58.51&quot; src=&quot;/img/Screen-Shot-2013-10-21-at-16.58.51.png&quot; width=&quot;750&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In this wizard, click ‘next’ and it will ask you to test your fix. Click ‘Test the program’ and it will start Visual Studio.&lt;/p&gt;
+
+&lt;p&gt;&lt;img alt=&quot;Screen Shot 2013-10-21 at 16.59.07&quot; src=&quot;/img/Screen-Shot-2013-10-21-at-16.59.07.png&quot; width=&quot;750&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Close it for now and click “next” in the wizard. We are assuming this fixes our problem and we click “Yes, save these settings for this program”.&lt;/p&gt;
+
+&lt;h2 id=&quot;finished&quot;&gt;Finished&lt;/h2&gt;
+&lt;p&gt;Yay, we are done now. Now Visual Studio ALWAYS starts in Administrator mode and can connect to IIS without problems. It makes my life so much easier.&lt;/p&gt;
+</description>
+        <pubDate>Mon, 21 Oct 2013 00:00:00 +0200</pubDate>
+        <link>http://cocoa.ninja/posts/windows-8-visual-studio-iis-play-nice</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/windows-8-visual-studio-iis-play-nice</guid>
+        
+        <category>Windows 8</category>
+        
+        <category>Visual Studio</category>
+        
+        <category>IIS</category>
+        
+        
+      </item>
+    
+      <item>
+        <title>Useful UIColor extension</title>
+        <description>&lt;p&gt;Just wanted to post this, because I found these UIColor extensions really useful. &lt;!-- more --&gt;This extension contains 2 methods, which do exactly what I want them to do:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;How do I invert a UIColor&lt;/li&gt;
+  &lt;li&gt;How can I detect contrast from a UIColor&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;Header file&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;lineno&quot;&gt;1&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;@interface&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;UIColor&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;(Detection)&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;2&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIColor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;invertColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;4&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;isDarkColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;5&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;6&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Implementation file&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-objc&quot; data-lang=&quot;objc&quot;&gt;&lt;span class=&quot;lineno&quot;&gt; 1&lt;/span&gt; &lt;span class=&quot;cp&quot;&gt;#import &amp;quot;UIColor+Detection.h&amp;quot;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 2&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt; 3&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;@implementation&lt;/span&gt; &lt;span class=&quot;bp&quot;&gt;UIColor&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;(Detection)&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 4&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt; 5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIColor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;invertColor&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 6&lt;/span&gt; 	&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGColorGetComponents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CGColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 7&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt; 8&lt;/span&gt; 	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[[&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;UIColor&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alloc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;nl&quot;&gt;initWithRed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt; 9&lt;/span&gt; 								  &lt;span class=&quot;nl&quot;&gt;green&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;10&lt;/span&gt; 								   &lt;span class=&quot;nl&quot;&gt;blue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;11&lt;/span&gt; 								  &lt;span class=&quot;nl&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;12&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;13&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;14&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;BOOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;isDarkColor&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;15&lt;/span&gt; 	&lt;span class=&quot;k&quot;&gt;const&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;CGColorGetComponents&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;bp&quot;&gt;CGColor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;16&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;17&lt;/span&gt;     &lt;span class=&quot;n&quot;&gt;CGFloat&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;colorBrightness&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;299&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;18&lt;/span&gt; 							   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;587&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;19&lt;/span&gt; 							   &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;componentColors&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;114&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;20&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;21&lt;/span&gt; 	&lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;colorBrightness&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;22&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;lineno&quot;&gt;23&lt;/span&gt; 
+&lt;span class=&quot;lineno&quot;&gt;24&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;@end&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+
+&lt;p&gt;The detection for color contrast can of course be refined. This just returns a &lt;code&gt;YES&lt;/code&gt; or &lt;code&gt;NO&lt;/code&gt;, but based on the &lt;code&gt;colorBrightness&lt;/code&gt; value you can also make this method return other values. In my case, this would be enough.&lt;/p&gt;
+</description>
+        <pubDate>Sat, 22 Jun 2013 09:23:14 +0200</pubDate>
+        <link>http://cocoa.ninja/posts/Useful-UIColor-Extensions</link>
+        <guid isPermaLink="true">http://cocoa.ninja/posts/Useful-UIColor-Extensions</guid>
+        
+        <category>objC</category>
+        
+        <category>UIColor</category>
+        
+        
+      </item>
+    
+  </channel>
+</rss>

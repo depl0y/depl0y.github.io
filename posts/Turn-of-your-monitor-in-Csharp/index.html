@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Turn off your monitor in C#</title>
+  <meta name="description" content="I once answered a question on Stack Overflow on how to turn your monitor off in C#. It seems that the answer no longer worked on Windows 7 en 8. So here is a...">
+
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  
+<!--  <link rel="stylesheet" href="/css/main.css"> -->
+  <link rel="canonical" href="http://cocoa.ninja/posts/Turn-of-your-monitor-in-Csharp">
+  <link rel="alternate" type="application/rss+xml" title="cocoa.ninja" href="http://cocoa.ninja/feed.xml" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>	    
+      <a class="navbar-brand" href="/">
+         cocoa.ninja
+      </a>
+    </div>
+  
+	  <div class="collapse navbar-collapse">
+	      <ul class="nav navbar-nav navbar-right">
+		      <li>
+			  	<a href="https://twitter.com/depl0y">
+					<img src="/img/svg/twitter.svg">
+				</a>
+	        
+			</li>
+	     
+			<li class="icon  icon--github">
+				<a href="https://github.com/depl0y">
+					<img src="/img/svg/github.svg">
+				</a>
+			</li>	 
+		
+		
+			<li class="icon icon--mail">
+				<a href="mailto:wim@sortedbits.com">
+					<img src="/img/svg/mail.svg">
+				</a>
+			</li>
+			
+			<li class="icon icon--so">
+				<a href="http://stackoverflow.com/users/69313/wim-haanstra">
+					<img src="/img/svg/stackoverflow.svg">
+				</a>
+			</li>
+			
+			
+			<li class="icon icon--so">
+				<a href="skype:wimhaanstra" id="skype_call_wim">
+					<img src="/img/svg/skype.svg">
+				</a>
+			</li>
+	  	</ul>
+	  </div>
+  </div>
+</nav>
+
+
+    <div class="container">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Turn off your monitor in C#</h1>
+  </header>
+</div>
+
+<div class="post-info">
+	<div class="author-avatar">
+		<img src="http://www.gravatar.com/avatar/0ec84fc5efb4f0dc7db5df8bf6bb41b9.png">
+	</div>
+	<div class="details">
+		<div class="row">
+			<div class="col-md-12 author-name">
+				Wim Haanstra
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 post-subtitle">
+				This post was created on <span class="post-date">February 3, 2013</span>.
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 tags">
+		   		
+		   			<span class="tag">C#</span>
+		   		
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="post">
+  <article class="post-content">
+    
+<p>I once answered a question on <a href="http://stackoverflow.com/questions/713498/turn-on-off-monitor/713511#713511">Stack Overflow</a> on how to turn your monitor off in C#. It seems that the answer no longer worked on Windows 7 en 8. So here is an updated version, which works for me on at least Windows 7. 
+<!-- more --></p>
+
+<div class="highlight"><pre><code class="language-c#" data-lang="c#"><span class="lineno"> 1</span> <span class="k">namespace</span> <span class="nn">MonitorOff</span> <span class="p">{</span>
+<span class="lineno"> 2</span> 
+<span class="lineno"> 3</span> 	<span class="k">public</span> <span class="k">enum</span> <span class="n">MonitorState</span> <span class="p">{</span>
+<span class="lineno"> 4</span> 		<span class="n">MonitorStateOn</span> <span class="p">=</span> <span class="p">-</span><span class="m">1</span><span class="p">,</span>
+<span class="lineno"> 5</span> 		<span class="n">MonitorStateOff</span> <span class="p">=</span> <span class="m">2</span><span class="p">,</span>
+<span class="lineno"> 6</span> 		<span class="n">MonitorStateStandBy</span> <span class="p">=</span> <span class="m">1</span>
+<span class="lineno"> 7</span> 	<span class="p">}</span>
+<span class="lineno"> 8</span> 
+<span class="lineno"> 9</span> 	<span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">Form1</span> <span class="p">:</span> <span class="n">Form</span> <span class="p">{</span>
+<span class="lineno">10</span> <span class="na">		[DllImport(&quot;user32.dll&quot;)]</span>
+<span class="lineno">11</span> 		<span class="k">private</span> <span class="k">static</span> <span class="k">extern</span> <span class="kt">int</span> <span class="nf">SendMessage</span><span class="p">(</span><span class="kt">int</span> <span class="n">hWnd</span><span class="p">,</span> <span class="kt">int</span> <span class="n">hMsg</span><span class="p">,</span> <span class="kt">int</span> <span class="n">wParam</span><span class="p">,</span> <span class="kt">int</span> <span class="n">lParam</span><span class="p">);</span>
+<span class="lineno">12</span> 
+<span class="lineno">13</span> 		<span class="k">public</span> <span class="nf">Form1</span><span class="p">()</span> <span class="p">{</span>
+<span class="lineno">14</span> 			<span class="n">InitializeComponent</span><span class="p">();</span>
+<span class="lineno">15</span> 			<span class="n">SystemEvents</span><span class="p">.</span><span class="n">SessionSwitch</span> <span class="p">+=</span> <span class="n">SystemEvents_SessionSwitch</span><span class="p">;</span>
+<span class="lineno">16</span> 		<span class="p">}</span>
+<span class="lineno">17</span> 
+<span class="lineno">18</span> 		<span class="k">void</span> <span class="nf">SystemEvents_SessionSwitch</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">SessionSwitchEventArgs</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">19</span> 			<span class="n">SetMonitorInState</span><span class="p">(</span><span class="n">MonitorState</span><span class="p">.</span><span class="n">MonitorStateOff</span><span class="p">);</span>
+<span class="lineno">20</span> 		<span class="p">}</span>
+<span class="lineno">21</span> 
+<span class="lineno">22</span> 		<span class="k">private</span> <span class="k">void</span> <span class="nf">button1_Click</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">23</span> 			<span class="n">SetMonitorInState</span><span class="p">(</span><span class="n">MonitorState</span><span class="p">.</span><span class="n">MonitorStateOff</span><span class="p">);</span>
+<span class="lineno">24</span> 		<span class="p">}</span>
+<span class="lineno">25</span> 
+<span class="lineno">26</span> 		<span class="k">private</span> <span class="k">void</span> <span class="nf">SetMonitorInState</span><span class="p">(</span><span class="n">MonitorState</span> <span class="n">state</span><span class="p">)</span> <span class="p">{</span>
+<span class="lineno">27</span> 			<span class="n">SendMessage</span><span class="p">(</span><span class="m">0</span><span class="n">xFFFF</span><span class="p">,</span> <span class="m">0</span><span class="n">x112</span><span class="p">,</span> <span class="m">0</span><span class="n">xF170</span><span class="p">,</span> <span class="p">(</span><span class="kt">int</span><span class="p">)</span><span class="n">state</span><span class="p">);</span>
+<span class="lineno">28</span> 		<span class="p">}</span>
+<span class="lineno">29</span> 	<span class="p">}</span>
+<span class="lineno">30</span> <span class="p">}</span></code></pre></div>
+
+<p>As an added bonus I also added some code to turn off your monitor when you lock your machine (need to keep this app running of course).</p>
+
+
+  </article>
+</div>
+
+
+<div id="disqus_thread" class="comments">
+  <script type="text/javascript">
+      var disqus_shortname = 'cocoaninja';
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+    </div>
+
+    <footer class="footer">
+	<div class="container">
+		<p class="text-muted">&copy; 2015 - Wim Haanstra</p>
+	</div>
+</footer>
+
+	<script type="text/javascript" src="/js/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-15884210-11', 'auto');
+	  ga('send', 'pageview');
+	
+	</script>
+	
+  </body>
+
+</html>

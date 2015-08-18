@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/Device-harvesting</loc>
+      
+        <lastmod>2015-06-10T07:21:14+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/Filter-out-screenshot-using-Photos</loc>
+      
+        <lastmod>2015-04-29T19:23:14+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/Mobile-phone-history</loc>
+      
+        <lastmod>2015-04-27T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/HomeWizard-Online-API</loc>
+      
+        <lastmod>2015-04-22T09:23:14+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/HomeWizard-Hues-and-UIColor</loc>
+      
+        <lastmod>2014-06-14T09:23:14+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/HomeWizard-API-calls</loc>
+      
+        <lastmod>2014-04-14T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/Calculating-the-percentage-from-a-point</loc>
+      
+        <lastmod>2014-03-05T08:23:14+01:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/Getting-the-size-of-a-NSAttributedString</loc>
+      
+        <lastmod>2014-02-13T08:23:14+01:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/windows-8-visual-studio-iis-play-nice</loc>
+      
+        <lastmod>2013-10-21T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/Useful-UIColor-Extensions</loc>
+      
+        <lastmod>2013-06-22T09:23:14+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/pybonjour-python-3</loc>
+      
+        <lastmod>2013-04-17T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/Turn-of-your-monitor-in-Csharp</loc>
+      
+        <lastmod>2013-02-03T08:23:14+01:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/Disable-Office-365-password-expiration</loc>
+      
+        <lastmod>2013-01-16T00:00:00+01:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/stacked-progress-bar-graph</loc>
+      
+        <lastmod>2012-05-27T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/async-downloading-of-data</loc>
+      
+        <lastmod>2011-12-07T00:00:00+01:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/using-nslog-only-in-a-debug-version</loc>
+      
+        <lastmod>2010-10-15T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/localization-of-your-io-app</loc>
+      
+        <lastmod>2010-09-27T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/sending-an-email-with-an-attachment-from-your-iphone</loc>
+      
+        <lastmod>2010-08-28T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/save-an-uiview-to-an-uiimage-in-objective-c</loc>
+      
+        <lastmod>2010-08-26T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/note-to-self-how-to-convert-hex-codes-in-a-nsstring</loc>
+      
+        <lastmod>2010-08-10T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/putting-a-uipickerview-on-a-uiactionsheet</loc>
+      
+        <lastmod>2010-07-17T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/queueing-http-requests-in-objc</loc>
+      
+        <lastmod>2010-04-21T00:00:00+02:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/reading-big-xml-file-with-c-xmlreader</loc>
+      
+        <lastmod>2010-02-01T00:00:00+01:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/resizing-an-image-in-c</loc>
+      
+        <lastmod>2010-01-26T00:00:00+01:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+    <url>
+      <loc>http://cocoa.ninja/posts/NSURLConnection-in-own-thread</loc>
+      
+        <lastmod>2009-02-09T00:00:00+01:00</lastmod>
+      
+      <changefreq>weekly</changefreq>
+      <priority>1.0</priority>
+    </url>
+  
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+</urlset>

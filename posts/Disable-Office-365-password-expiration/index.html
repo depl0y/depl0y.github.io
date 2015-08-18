@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Disable Office 365 password expiration</title>
+  <meta name="description" content="So, you got Office 365 for you and your employees, but then the strict nagging about password policies start. In some cases you just want it disabled and the...">
+
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/main.css">
+  
+<!--  <link rel="stylesheet" href="/css/main.css"> -->
+  <link rel="canonical" href="http://cocoa.ninja/posts/Disable-Office-365-password-expiration">
+  <link rel="alternate" type="application/rss+xml" title="cocoa.ninja" href="http://cocoa.ninja/feed.xml" />
+  
+</head>
+
+
+  <body>
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+  <div class="container">
+    <div class="navbar-header">
+		<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>	    
+      <a class="navbar-brand" href="/">
+         cocoa.ninja
+      </a>
+    </div>
+  
+	  <div class="collapse navbar-collapse">
+	      <ul class="nav navbar-nav navbar-right">
+		      <li>
+			  	<a href="https://twitter.com/depl0y">
+					<img src="/img/svg/twitter.svg">
+				</a>
+	        
+			</li>
+	     
+			<li class="icon  icon--github">
+				<a href="https://github.com/depl0y">
+					<img src="/img/svg/github.svg">
+				</a>
+			</li>	 
+		
+		
+			<li class="icon icon--mail">
+				<a href="mailto:wim@sortedbits.com">
+					<img src="/img/svg/mail.svg">
+				</a>
+			</li>
+			
+			<li class="icon icon--so">
+				<a href="http://stackoverflow.com/users/69313/wim-haanstra">
+					<img src="/img/svg/stackoverflow.svg">
+				</a>
+			</li>
+			
+			
+			<li class="icon icon--so">
+				<a href="skype:wimhaanstra" id="skype_call_wim">
+					<img src="/img/svg/skype.svg">
+				</a>
+			</li>
+	  	</ul>
+	  </div>
+  </div>
+</nav>
+
+
+    <div class="container">
+        <div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Disable Office 365 password expiration</h1>
+  </header>
+</div>
+
+<div class="post-info">
+	<div class="author-avatar">
+		<img src="http://www.gravatar.com/avatar/0ec84fc5efb4f0dc7db5df8bf6bb41b9.png">
+	</div>
+	<div class="details">
+		<div class="row">
+			<div class="col-md-12 author-name">
+				Wim Haanstra
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 post-subtitle">
+				This post was created on <span class="post-date">January 16, 2013</span>.
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 tags">
+		   		
+		   			<span class="tag">Office365</span>
+		   		
+		   			<span class="tag">PowerShell</span>
+		   		
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="post">
+  <article class="post-content">
+    <p>So, you got Office 365 for you and your employees, but then the strict nagging about password policies start. In some cases you just want it disabled and there is no way to do this by using the web interface.<!-- more --></p>
+
+<p>So here are the steps you need to take to disable password expiration for one and for all the users in your Office 365 account.</p>
+
+<p>First, you need to install 3 things. If you have already installed them, you obviously do not need to install them again.</p>
+
+<ul>
+  <li>PowerShell, which is already installed on Windows 7 and can otherwise be found on Microsofts site.</li>
+  <li>Microsoft Online Services Sign-In Assistant - <a title="Link (3.9 or 5.6MB)" href="http://www.microsoft.com/en-us/download/details.aspx?id=28177">Link (3.9 or 5.6MB)</a></li>
+  <li>Microsoft Online Service Module for PowerShell - <a href="http://go.microsoft.com/fwlink/p/?linkid=236345">Link (x86 version)</a> - <a href="http://go.microsoft.com/fwlink/p/?linkid=236293">Link (x64 version)</a></li>
+</ul>
+
+<p>Great, so you did all that already? Now let’s move on to getting those password expirations removed.</p>
+
+<p>Now, go to your Start Menu and find the “Microsoft Online Services Module for Windows PowerShell” item. Do <strong>not</strong> run the normal PowerShell, we need the Microsoft Online Services one. Found it? Now start it and enter the commands below in that PowerShell.</p>
+
+<p><strong>Connecting to the Office 365 servers</strong></p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> <span class="nv">$cred</span><span class="o">=</span>Get-Credential
+<span class="lineno">2</span> connect-MSOLService -credential <span class="nv">$cred</span></code></pre></div>
+
+<p>After typing the first line, you will be asked to authenticate, you need to authenticate with a user who has <strong>administration</strong> privileges.</p>
+
+<p><strong>Disabling password expiration for all accounts</strong></p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> Get-MSOLUser <span class="p">|</span> Set-MsolUser -PasswordNeverExpires <span class="nv">$true</span></code></pre></div>
+
+<h2 id="disabling-password-expiration-for-one-account">Disabling password expiration for one account</h2>
+<p>You might want to check first if the user already has it’s password expiration set. This is done quite easily:</p>
+
+<p><strong>Get password expiration status for all users</strong></p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> Get-MSOLUser <span class="p">|</span> <span class="k">select</span> UserPrincipalName, PasswordNeverExpires</code></pre></div>
+
+<p><strong>Get password expiration status for specific user</strong></p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> Get-MSOLUser -UserPrincipalName myemail@here.com <span class="p">|</span> Select PasswordNeverExpires</code></pre></div>
+
+<p><strong>Setting the password to never expire</strong></p>
+
+<div class="highlight"><pre><code class="language-bash" data-lang="bash"><span class="lineno">1</span> Set-MsolUser -UserPrincipalName myemail@here.com -PasswordNeverExpires <span class="nv">$true</span></code></pre></div>
+
+<p>So there you have it, just replace the myemail@here.com with the email address of the account where you would like to disable the password expiration.</p>
+
+  </article>
+</div>
+
+
+<div id="disqus_thread" class="comments">
+  <script type="text/javascript">
+      var disqus_shortname = 'cocoaninja';
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+          var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+          dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+          (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
+</div>
+
+
+    </div>
+
+    <footer class="footer">
+	<div class="container">
+		<p class="text-muted">&copy; 2015 - Wim Haanstra</p>
+	</div>
+</footer>
+
+	<script type="text/javascript" src="/js/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript" src="/js/bootstrap.min.js"></script>
+
+	<script>
+	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+	
+	  ga('create', 'UA-15884210-11', 'auto');
+	  ga('send', 'pageview');
+	
+	</script>
+	
+  </body>
+
+</html>
