@@ -1,0 +1,163 @@
+<!DOCTYPE HTML>
+<html>
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content>
+  
+  <title>My Unraid experience</title>
+  
+  <meta name="author" content="Wim Haanstra">
+  
+  <meta name="description" content="Soooo, I was using an old Synology NAS in my network, which had some trouble keeping up with the enhancements of the rest of my network. It was a 4 ba">
+  
+  
+  
+  <meta property="og:title" content="My Unraid experience">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Personal blog">
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Personal blog" type="application/atom+xml">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script src="/js/gallery.js"></script>
+</head>
+</html>
+<body>
+<nav class="navigator"><nav class="navbar navbar-default navbar-fixed-top">
+  <div class="nav-container">
+
+    <ul class="nav navbar-nav navbar-left">
+      <li class="navbar-header">
+        <a href="/" class="navbar-brand">X77</a>
+      </li>
+    </ul>
+        
+    <ul class="nav navbar-nav navbar-right">
+      <li class="archives"><a href="/archives">
+          <svg class="i-archive" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor"
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+            <path d="M4 10 L4 28 28 28 28 10 M2 4 L2 10 30 10 30 4 Z M12 15 L20 15"></path>
+          </svg>
+        </a></li>
+    </ul>
+  </div>
+</nav>
+</nav>
+  
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      
+
+<article class="standard post">
+  <div class="title">
+    
+  
+    <h1 class="page-title center">
+        My Unraid experience
+    </h1>
+  
+
+
+  </div>
+  <div class="meta center">
+    
+<time datetime="2019-06-27T19:55:00.000Z">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor"
+    stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-06-27
+</time>
+
+
+
+
+&nbsp;
+<svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round"
+  stroke-linejoin="round" stroke-width="2">
+  <circle cx="24" cy="8" r="2"></circle>
+  <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+</svg>
+&nbsp;
+<a href="/categories/Unraid/">Unraid</a>
+
+
+
+
+
+  </div>
+  <hr>
+  
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#The-old-solution"><span class="toc-text">The old solution</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#The-new-solution"><span class="toc-text">The new solution</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Problems-I-had"><span class="toc-text">Problems I had</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Future-upgrades"><span class="toc-text">Future upgrades</span></a></li></ol>
+  
+  <div class="picture-container">
+    
+  </div>
+  <p>Soooo, I was using an old Synology NAS in my network, which had some trouble keeping up with the enhancements of the rest of my network. It was a 4 bay Synology, equiped with four 3TB drives. Since a couple of DSM updates, the interface was getting really slow and transfer rates were not very positve (read: 15-20Mbps).</p>
+<p>While this was getting more and more frustrating, it also got problematic. Streams were getting too slow, because the resolution of video streams was getting higher (4k, yay!).</p>
+<p>Time to find a new solution, but not one costing me an arm and a leg, event better, it would not cost me more than $100.</p>
+<h1 id="The-old-solution"><a href="#The-old-solution" class="headerlink" title="The old solution"></a>The old solution</h1><p>My Windows 10 gaming PC, running an Ubuntu VM, which runs Docker.</p>
+<ul>
+<li>Intel I7-7700</li>
+<li>32 GB DDR4 RAM</li>
+<li>1x 512GB EVO 960 M.2 SSD</li>
+<li>1x 1TB EVO 960 M.2 SSD</li>
+<li>4 TB old-skool hard-drive</li>
+<li>Nvidia Geforce GTX-1080 </li>
+</ul>
+<p>My old Synology NAS:</p>
+<ul>
+<li>4x 3TB Western Digital drive</li>
+</ul>
+<p>Because of the dockers running on the VM, the PC could not be shut down, otherwise Home Assistant and Plex would be down, which I want up 100% of the time.</p>
+<h1 id="The-new-solution"><a href="#The-new-solution" class="headerlink" title="The new solution"></a>The new solution</h1><p>I remembered that Linus Tech Tips had a video about an OS that would function as a NAS and could run a VM with hardware passthrough. The hardware passthrough was needed for some gaming.</p>
+<p>So I took the leap, I cleaned up my Synology NAS (12 TB of data, shrunk down to 3TB of data which I really wanted to keep) and I backed up my data to a cloud solution.</p>
+<p>I moved all my drives over to my PC and set up an USB key with Unraid OS and started setting up Unraid. This was really easy, just dump all your drives in an array and start it up. I kept my SSD’s out of the array because I wanted to map those nativly to my Windows 10 virtual machine.</p>
+<p>After the array was online I started adding dockers to Unraid, to get my Home Assistant back online as soon as I could (turning on the lights seemed important). The dockers were back online within the hour and then fun could begin: Setting up a Windows VM for gaming.</p>
+<h1 id="Problems-I-had"><a href="#Problems-I-had" class="headerlink" title="Problems I had"></a>Problems I had</h1><h5 id="SQLite"><a href="#SQLite" class="headerlink" title="SQLite"></a>SQLite</h5><p>I am using a couple of dockers which use SQLite databases and together with Unraid and multi-disk shares that really causes some headache. Every day both my Plex and Sonarr kept going down with database issues (corruption).</p>
+<p>I moved my Docker configuration storage share to a single disk and that solved the corruption problems.</p>
+<h5 id="Slow-performance"><a href="#Slow-performance" class="headerlink" title="Slow performance"></a>Slow performance</h5><p>Another problem I had was that the performance was really bad at first. After installing all the disks the array started in minutes, instead of seconds. Also, the transfer rates and the dockers were really slow. Turns out, one of my disks was bad, but still had a good SMART status. I noticed the error count for that disk being higher than 0.</p>
+<h1 id="Future-upgrades"><a href="#Future-upgrades" class="headerlink" title="Future upgrades"></a>Future upgrades</h1><p>While this systems runs fairly well, I do seem a bit underpowered on the total amount of cores available. If my Plex docker is transcoding a video stream and a game is also running on my Windows VM, this causes some slowdowns and performance isn’t as high as I would like (4K streams seem to stutter sometimes).</p>
+<p>With the Ryzen 3000 CPU’s around the corner, this could be a low-cost upgrade, to make my system faster and equip it with an 8 core CPU (giving me 16 threads).</p>
+
+
+</article>
+
+
+    
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+    // dropdown scripts
+    $(".dropdown").click(function (event) {
+      var current = $(this);
+      event.stopPropagation();
+      $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open")) ? 'removeClass' : 'addClass']("open")
+    });
+  $(document).click(function () {
+    $(".dropdown-content").removeClass("open");
+  })
+
+</script>
+
+</body>
+</html>

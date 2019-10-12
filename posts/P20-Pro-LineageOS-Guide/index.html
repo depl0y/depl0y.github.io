@@ -1,0 +1,189 @@
+<!DOCTYPE HTML>
+<html>
+
+<head><meta name="generator" content="Hexo 3.9.0">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="google-site-verification" content>
+  
+  <title>P20 Pro LineageOS flashing guide</title>
+  
+  <meta name="author" content="Wim Haanstra">
+  
+  <meta name="description" content="I tried installing LineageOS on my P20 Pro a couple of times now, but it failed every time. Usually because I had a new EMUI installed, which wasn’t s">
+  
+  
+  
+  <meta property="og:title" content="P20 Pro LineageOS flashing guide">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:site_name" content="Personal blog">
+  <link href="/apple-touch-icon-precomposed.png" sizes="180x180" rel="apple-touch-icon-precomposed">
+  <link rel="alternate" href="/atom.xml" title="Personal blog" type="application/atom+xml">
+  <link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/m.min.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <script src="/js/gallery.js"></script>
+</head>
+</html>
+<body>
+<nav class="navigator"><nav class="navbar navbar-default navbar-fixed-top">
+  <div class="nav-container">
+
+    <ul class="nav navbar-nav navbar-left">
+      <li class="navbar-header">
+        <a href="/" class="navbar-brand">X77</a>
+      </li>
+    </ul>
+        
+    <ul class="nav navbar-nav navbar-right">
+      <li class="archives"><a href="/archives">
+          <svg class="i-archive" viewBox="0 0 32 32" width="22" height="22" fill="none" stroke="currentcolor"
+            stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+            <path d="M4 10 L4 28 28 28 28 10 M2 4 L2 10 30 10 30 4 Z M12 15 L20 15"></path>
+          </svg>
+        </a></li>
+    </ul>
+  </div>
+</nav>
+</nav>
+  
+  <a id="top"></a>
+  <div id="main">
+    <div class="main-ctnr">
+      
+
+<article class="standard post">
+  <div class="title">
+    
+  
+    <h1 class="page-title center">
+        P20 Pro LineageOS flashing guide
+    </h1>
+  
+
+
+  </div>
+  <div class="meta center">
+    
+<time datetime="2019-10-14T17:55:00.000Z">
+  <svg class="i-calendar" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor"
+    stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+    <path d="M2 6 L2 30 30 30 30 6 Z M2 15 L30 15 M7 3 L7 9 M13 3 L13 9 M19 3 L19 9 M25 3 L25 9"></path>
+  </svg>
+  &nbsp;
+  2019-10-14
+</time>
+
+
+
+
+&nbsp;
+<svg class="i-tag" viewBox="0 0 32 32" width="16" height="16" fill="none" stroke="currentcolor" stroke-linecap="round"
+  stroke-linejoin="round" stroke-width="2">
+  <circle cx="24" cy="8" r="2"></circle>
+  <path d="M2 18 L18 2 30 2 30 14 14 30 Z"></path>
+</svg>
+&nbsp;
+<a href="/categories/LineageOS/">LineageOS</a>
+
+
+
+
+
+  </div>
+  <hr>
+  
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#What-you-need"><span class="toc-text">What you need:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Before-we-start"><span class="toc-text">Before we start</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Downgrading-to-9-0"><span class="toc-text">Downgrading to 9.0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Edit-the-updater-script"><span class="toc-text">Edit the updater_script</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Install-TWRP"><span class="toc-text">Install TWRP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Flash-LineageOS-and-gapps"><span class="toc-text">Flash LineageOS (and gapps)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Flash-TWRP-again"><span class="toc-text">Flash TWRP again</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Huawei-camera-app"><span class="toc-text">Huawei camera app</span></a></li></ol>
+  
+  <div class="picture-container">
+    
+  </div>
+  <p>I tried installing LineageOS on my P20 Pro a couple of times now, but it failed every time. Usually because I had a new EMUI installed, which wasn’t supported or using the wrong versions of packages.</p>
+<p>So, today, I was about to try again. It worked and I actually documented it now.</p>
+<h1 id="What-you-need"><a href="#What-you-need" class="headerlink" title="What you need:"></a>What you need:</h1><ol>
+<li><a href="https://eu.dl.twrp.me/charlotte/" target="_blank" rel="noopener">TWRP</a> (I grabbed the latest one at the time)</li>
+<li><a href="https://download.lineageos.org/charlotte" target="_blank" rel="noopener">Lineage OS 16</a></li>
+<li><a href="https://developer.android.com/studio/releases/platform-tools" target="_blank" rel="noopener">Platform tools</a> (fastboot and adb)</li>
+<li><a href="https://consumer.huawei.com/en/support/hisuite/" target="_blank" rel="noopener">HiSuite</a> (if you are on EMUI 9.1 or higher)</li>
+</ol>
+<h1 id="Before-we-start"><a href="#Before-we-start" class="headerlink" title="Before we start"></a>Before we start</h1><p>All this has been made possible by a lot of people, all I did was write this hacky guide to get a P20 Pro, with an EMUI 9.1 ROM installed, flashed to LineageOS.</p>
+<ul>
+<li><a href="https://forum.xda-developers.com/member.php?u=5120185" target="_blank" rel="noopener">Flex1911</a></li>
+<li><a href="https://forum.xda-developers.com/member.php?u=5075128" target="_blank" rel="noopener">Luk1337</a></li>
+<li><a href="https://forum.xda-developers.com/huawei-p20-pro/development/rom-lineageos-16-0-t3878455" target="_blank" rel="noopener">A lot of hints /  tips tricks from this XDA thread</a></li>
+</ul>
+<p>Did I forget anyone? Let me know.</p>
+<h1 id="Downgrading-to-9-0"><a href="#Downgrading-to-9-0" class="headerlink" title="Downgrading to 9.0"></a>Downgrading to 9.0</h1><p>If you are already on EMUI 9.0 instead of 9.1, you should downgrade first to 9.0. This can be done by using HiSuite on Windows (OSX doesn’t have this option). I used <strong>9.0.0.293</strong> for this.</p>
+<h1 id="Edit-the-updater-script"><a href="#Edit-the-updater-script" class="headerlink" title="Edit the updater_script"></a>Edit the updater_script</h1><p>The P20 Pro requires the updater_script in the LineageOS zip file to be edited, before it will actually install. You can download an <a href="https://gist.githubusercontent.com/depl0y/35ac1500505110a17714e57181275215/raw/496bc702be1c70b96a044d76dd95343d13b34541/updater_script" target="_blank" rel="noopener">updated updater_script here</a> and insert it in the ZIP file at <code>META-INF\com\google\android\</code>. It should overwrite an already existing file.</p>
+<p>If you want to manually edit the file, just read <a href="https://forum.xda-developers.com/huawei-p20-pro/development/rom-lineageos-16-0-t3878455" target="_blank" rel="noopener">this thread on XDA</a>.</p>
+<h1 id="Install-TWRP"><a href="#Install-TWRP" class="headerlink" title="Install TWRP"></a>Install TWRP</h1><ol>
+<li>Enable USB debugging</li>
+<li><code>adb reboot bootloader</code></li>
+<li><code>fastboot flash recovery_ramdisk twrp-3.2.3-1-charlotte.img</code></li>
+<li>Prepare yourself to remove USB cable and hold volume up</li>
+<li><code>fastboot reboot</code></li>
+<li>Unplug and hold that button you were preparing for in #4</li>
+</ol>
+<p>You should now be in TWRP.</p>
+<h1 id="Flash-LineageOS-and-gapps"><a href="#Flash-LineageOS-and-gapps" class="headerlink" title="Flash LineageOS (and gapps)"></a>Flash LineageOS (and gapps)</h1><ol>
+<li>In TWRP go to <code>Advanced</code> &gt; <code>ADB Sideload</code></li>
+<li><code>adb sideload lineage.zip</code></li>
+<li><code>adb sideload mind-the-gapps</code></li>
+<li>In TWRP go to <code>Advanced</code> &gt; <code>Reboot</code> &gt; <code>Bootloader</code></li>
+<li><code>fastboot flash recovery_ramdisk RECOVERY_RAMDIS.IMG</code></li>
+<li><code>fastboot reboot recovery</code></li>
+<li>You should now be in the stock recovery. If not, boot into stock recovery :)</li>
+<li>Select <code>Wipe data / factory reset</code></li>
+<li>Reboot system now</li>
+</ol>
+<p>Yay, LineageOS</p>
+<h1 id="Flash-TWRP-again"><a href="#Flash-TWRP-again" class="headerlink" title="Flash TWRP again"></a>Flash TWRP again</h1><p>So, I flashed TWRP again after LineageOS was flashed, to make sure I could easily update it to the latest version. There is a problem with the updater in LineageOS in combination with TWRP, but at least you can install the latest version using the ADB sideloading method.</p>
+<h1 id="Huawei-camera-app"><a href="#Huawei-camera-app" class="headerlink" title="Huawei camera app"></a>Huawei camera app</h1><p>After I got this running, I did want the Huawei camera app back, because that is actually quite a cool app.</p>
+<p>You can download the ZIP from <a href="https://forum.xda-developers.com/project-treble/trebleenabled-device-development/kirin-huawei-camera-android-p-t3840110" target="_blank" rel="noopener">this thread</a>. You also need to download <a href="https://forum.xda-developers.com/attachment.php?attachmentid=4816536&d=1567884666" target="_blank" rel="noopener">this XML file</a>.</p>
+<ol>
+<li>Boot in TWRP</li>
+<li>Go to <code>Advanced</code> &gt; <code>ADB Sideload</code></li>
+<li><code>adb sideload HwCamera2_addon_P.zip</code></li>
+<li><code>adb push privapp-permissions-com.huawei.camera.xml /tmp</code></li>
+<li>Go to <code>Mount</code> and check the <code>system</code> partition.</li>
+<li>Go to <code>Advanced</code> &gt; <code>File Manager</code></li>
+<li>Move the <code>privapp-permissions-com.huawei.camera.xml</code> from <code>/tmp</code> to <code>/system/system/etc/permissions</code></li>
+<li>Reboot!</li>
+</ol>
+
+
+</article>
+
+
+    
+
+
+
+
+    </div>
+  </div>
+  <footer class="page-footer"><div class="clearfix">
+</div>
+</footer>
+  <script src="//cdn.bootcss.com/jquery/2.2.1/jquery.min.js"></script>
+<script type="text/javascript">
+
+// disqus scripts
+
+
+    // dropdown scripts
+    $(".dropdown").click(function (event) {
+      var current = $(this);
+      event.stopPropagation();
+      $(current).children(".dropdown-content")[($(current).children(".dropdown-content").hasClass("open")) ? 'removeClass' : 'addClass']("open")
+    });
+  $(document).click(function () {
+    $(".dropdown-content").removeClass("open");
+  })
+
+</script>
+
+</body>
+</html>
