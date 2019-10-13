@@ -56,11 +56,10 @@
 <article class="standard post">
   <div class="title">
     
-  
-    <h1 class="page-title center">
-        P20 Pro LineageOS flashing guide
-    </h1>
-  
+
+<h1 class="page-title center">
+    P20 Pro LineageOS flashing guide
+</h1>
 
 
   </div>
@@ -94,7 +93,7 @@
   </div>
   <hr>
   
-  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#What-you-need"><span class="toc-text">What you need:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Before-we-start"><span class="toc-text">Before we start</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Downgrading-to-9-0"><span class="toc-text">Downgrading to 9.0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Edit-the-updater-script"><span class="toc-text">Edit the updater_script</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Install-TWRP"><span class="toc-text">Install TWRP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Flash-LineageOS-and-gapps"><span class="toc-text">Flash LineageOS (and gapps)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Flash-TWRP-again"><span class="toc-text">Flash TWRP again</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Huawei-camera-app"><span class="toc-text">Huawei camera app</span></a></li></ol>
+  <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#What-you-need"><span class="toc-text">What you need:</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Before-we-start"><span class="toc-text">Before we start</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Downgrading-to-9-0"><span class="toc-text">Downgrading to 9.0</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Edit-the-updater-script"><span class="toc-text">Edit the updater_script</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Getting-RECOVERY-RAMDIS-IMG"><span class="toc-text">Getting RECOVERY_RAMDIS.IMG</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Install-TWRP"><span class="toc-text">Install TWRP</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Flash-LineageOS-and-gapps"><span class="toc-text">Flash LineageOS (and gapps)</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Flash-TWRP-again"><span class="toc-text">Flash TWRP again</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#Huawei-camera-app"><span class="toc-text">Huawei camera app</span></a></li></ol>
   
   <div class="picture-container">
     
@@ -106,6 +105,8 @@
 <li><a href="https://download.lineageos.org/charlotte" target="_blank" rel="noopener">Lineage OS 16</a></li>
 <li><a href="https://developer.android.com/studio/releases/platform-tools" target="_blank" rel="noopener">Platform tools</a> (fastboot and adb)</li>
 <li><a href="https://consumer.huawei.com/en/support/hisuite/" target="_blank" rel="noopener">HiSuite</a> (if you are on EMUI 9.1 or higher)</li>
+<li><a href="https://forum.xda-developers.com/showthread.php?t=2433454" target="_blank" rel="noopener">Huawei Firmware Extractor</a></li>
+<li><a href="#Getting-RECOVERY-RAMDIS-IMG">RECOVERY_RAMDIS.IMG</a> (recovery from an official Huawei ROM)</li>
 </ol>
 <h1 id="Before-we-start"><a href="#Before-we-start" class="headerlink" title="Before we start"></a>Before we start</h1><p>All this has been made possible by a lot of people, all I did was write this hacky guide to get a P20 Pro, with an EMUI 9.1 ROM installed, flashed to LineageOS.</p>
 <ul>
@@ -117,6 +118,21 @@
 <h1 id="Downgrading-to-9-0"><a href="#Downgrading-to-9-0" class="headerlink" title="Downgrading to 9.0"></a>Downgrading to 9.0</h1><p>If you are already on EMUI 9.0 instead of 9.1, you should downgrade first to 9.0. This can be done by using HiSuite on Windows (OSX doesn’t have this option). I used <strong>9.0.0.293</strong> for this.</p>
 <h1 id="Edit-the-updater-script"><a href="#Edit-the-updater-script" class="headerlink" title="Edit the updater_script"></a>Edit the updater_script</h1><p>The P20 Pro requires the updater_script in the LineageOS zip file to be edited, before it will actually install. You can download an <a href="https://gist.githubusercontent.com/depl0y/35ac1500505110a17714e57181275215/raw/496bc702be1c70b96a044d76dd95343d13b34541/updater_script" target="_blank" rel="noopener">updated updater_script here</a> and insert it in the ZIP file at <code>META-INF\com\google\android\</code>. It should overwrite an already existing file.</p>
 <p>If you want to manually edit the file, just read <a href="https://forum.xda-developers.com/huawei-p20-pro/development/rom-lineageos-16-0-t3878455" target="_blank" rel="noopener">this thread on XDA</a>.</p>
+<h1 id="Getting-RECOVERY-RAMDIS-IMG"><a href="#Getting-RECOVERY-RAMDIS-IMG" class="headerlink" title="Getting RECOVERY_RAMDIS.IMG"></a>Getting RECOVERY_RAMDIS.IMG</h1><p>You will need a file called <strong>RECOVERY_RAMDIS.IMG</strong>. This is the official Huawei recovery which you can extract from an original ROM. So here are the things you need to get hold of it:</p>
+<ol>
+<li>Download an original Huawei ROM file for the P20 Pro. Find the right one of <a href="https://www.getdroidtips.com/huawei-p20-pro-android-9-0-pie/" target="_blank" rel="noopener">this page</a>. You should be picking the Update file for your phone. <strong>It is very important you know the right model for your phone</strong>. I picked <strong>9.0.0.195</strong> for the <strong>CLT-L29C432</strong> for example.</li>
+<li>Extract the downloaded ZIP file. This will give you an <code>Update.zip</code> and some other files.</li>
+<li>Extract that <code>Update.zip</code> and that will give you access to the <code>Update.app</code> file you need.</li>
+<li>Start Huawei Firmware Extractor.</li>
+<li>Go to the <code>Settings</code> tab</li>
+<li>Disable <code>Verify header checksum</code></li>
+<li>Go to the <code>Extract</code> tab</li>
+<li>Select the <code>Update.app</code> file where it says <code>Update file</code>.</li>
+<li>The ROM should then load and it displays a list of files</li>
+<li>Find <code>RECOVERY_RAMDIS.IMG</code> (<strong>not</strong> <strong>E</strong>RECOVERY_RAMDI.IMG)</li>
+<li>Right-click that file and choose <code>Extract selected</code>, make sure you put it in a convenient spot.</li>
+<li>Done!</li>
+</ol>
 <h1 id="Install-TWRP"><a href="#Install-TWRP" class="headerlink" title="Install TWRP"></a>Install TWRP</h1><ol>
 <li>Enable USB debugging</li>
 <li><code>adb reboot bootloader</code></li>
